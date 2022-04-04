@@ -57,6 +57,7 @@ import Input from '../atoms/Input'
 import Message from '../atoms/Message'
 import { Validator as v } from '@/helpers/validators'
 import alert from '@/helpers/alerts'
+import router from '../../router'
 
 export default {
   components: { Input, Message },
@@ -89,6 +90,7 @@ export default {
       try {
         await this.$store.dispatch('register', this.user)
         alert('success', 'Sucesso!', 'Usuário cadastrado com sucesso.')
+        router.push({ name: 'login' })
       } catch (error) {
         alert('error', 'Erro!', 'Não foi possível cadastrar o usuário.')
       }
