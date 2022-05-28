@@ -26,7 +26,7 @@ export default {
     const token = localStorage.getItem('token')
     const curr_url = this.$router.history.current.name
     if ((!token || !user) && curr_url !== 'login') {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('user/logout')
     }
   },
 }

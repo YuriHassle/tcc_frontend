@@ -53,16 +53,16 @@ export default {
   },
   computed: {
     isUserAuthenticated() {
-      return this.$store.state.loginStatus.loggedIn
+      return this.$store.state.user.loginStatus.loggedIn
     },
     loggedUser() {
-      return this.$store.state.user
+      return this.$store.state.user.user
     },
   },
   methods: {
     handleDotMenuClick() {
       if (this.selectedDotMenu === 'logout') {
-        this.$store.dispatch('logout')
+        this.$store.dispatch('user/logout')
       }
       this.selectedDotMenu = ''
     },

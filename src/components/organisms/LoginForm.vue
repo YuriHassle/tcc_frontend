@@ -55,13 +55,13 @@ export default {
     handleSubmit() {
       this.$refs.loginForm.validate()
       if (this.valid) {
-        this.$store.dispatch('login', this.credentials)
+        this.$store.dispatch('user/login', this.credentials)
       }
     },
   },
   computed: {
     message() {
-      const loginStatus = this.$store.state.loginStatus
+      const loginStatus = this.$store.state.user.loginStatus
       if (!this.valid) {
         return 'Por favor, preencha os dados corretamente'
       } else if (loginStatus.loggingIn) {
@@ -75,7 +75,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('logout')
+    this.$store.dispatch('user/logout')
   },
 }
 </script>

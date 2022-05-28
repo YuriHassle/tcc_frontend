@@ -88,7 +88,7 @@ export default {
         return (this.message = 'Por favor, preencha os dados corretamente!')
       }
       try {
-        await this.$store.dispatch('register', this.user)
+        await this.$store.dispatch('user/register', this.user)
         alert('success', 'Sucesso!', 'Usuário cadastrado com sucesso.')
         router.push({ name: 'login' })
       } catch (error) {

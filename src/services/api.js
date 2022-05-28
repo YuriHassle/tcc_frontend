@@ -26,7 +26,7 @@ api.interceptors.response.use(
     if (error.response.status === 401) {
       if (router.history.current.name !== 'login') {
         router.push({ name: 'login' }).then(() => {
-          store.dispatch('logout')
+          store.dispatch('user/logout')
           alert(
             'info',
             'Sessão expirada',
