@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import RegisterInnView from '../views/RegisterInnView.vue'
 import InnView from '../views/InnView.vue'
 
 Vue.use(VueRouter)
@@ -24,7 +25,12 @@ const routes = [
     component: RegisterView,
   },
   {
-    path: '/inn',
+    path: '/inn/register',
+    name: 'register_inn',
+    component: RegisterInnView,
+  },
+  {
+    path: '/inn/:inn_id',
     name: 'inn',
     component: InnView,
   },

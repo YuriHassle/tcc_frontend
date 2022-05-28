@@ -6,15 +6,22 @@
       </h1>
       <p>
         Se você é proprietário de uma pousada e deseja cadastrá-la
-        <RouterLink to="/inn">clique aqui</RouterLink>
+        <RouterLink :to="{ name: 'register_inn' }">clique aqui</RouterLink>
       </p>
     </section>
     <section v-else>
       <h1 class="mb-6">Suas Pousadas</h1>
       <div v-for="(inn, index) in inns" :key="index" class="mb-4">
-        <strong class="inn-name">{{ inn.name }}</strong>
+        <RouterLink
+          :to="{ name: 'inn', params: { inn_id: inn.id } }"
+          class="inn-name"
+        >
+          {{ inn.name }}
+        </RouterLink>
       </div>
-      <RouterLink to="/inn">Cadastrar nova pousada</RouterLink>
+      <RouterLink :to="{ name: 'register_inn' }">
+        Cadastrar nova pousada
+      </RouterLink>
     </section>
     <Message :message="message" class="mt-6" />
   </v-main>
