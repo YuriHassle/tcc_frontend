@@ -1,10 +1,7 @@
 <template>
   <v-container>
     <v-app-bar app dense absolute>
-      <v-app-bar-nav-icon
-        v-if="isUserAuthenticated"
-        @click.prevent="drawer = true"
-      />
+      <v-app-bar-nav-icon v-if="showSideMenu" @click.prevent="drawer = true" />
       <v-app-bar-title> Inn Manager</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-menu v-if="isUserAuthenticated" offset-y>
@@ -36,20 +33,27 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <SideMenu v-if="isUserAuthenticated" :visible.sync="drawer" />
+    <SideMenu v-if="showSideMenu" :visible.sync="drawer" />
   </v-container>
 </template>
 
 <script>
 import SideMenu from './SideMenu.vue'
+import { mapState } from 'vuex'
 export default {
   name: 'Header',
   components: { SideMenu },
   data() {
     return {
+      isInHomePage: false,
       drawer: false,
       selectedDotMenu: '',
       dotsMenu: [
+        {
+          slug: 'inns',
+          label: 'Pousadas',
+          icon: 'mdi-home',
+        },
         {
           slug: 'logout',
           label: 'Logout',
@@ -59,6 +63,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('essential', ['showSideMenu']),
     isUserAuthenticated() {
       return this.$store.state.user.loginStatus.loggedIn
     },
@@ -70,6 +75,12 @@ export default {
     handleDotMenuClick() {
       if (this.selectedDotMenu === 'logout') {
         this.$store.dispatch('user/logout')
+      }
+      if (
+        this.selectedDotMenu === 'inns' &&
+        this.$router.history.current.name !== 'home'
+      ) {
+        this.$router.push({ name: 'home' })
       }
       this.selectedDotMenu = ''
     },

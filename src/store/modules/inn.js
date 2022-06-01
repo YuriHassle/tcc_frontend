@@ -5,13 +5,19 @@ const state = () => ({
 const getters = {}
 
 const actions = {
-  selectActiveInn({ commit }, inn) {
-    commit('setActiveInn', inn || null)
+  setActiveInn({ commit }, inn) {
+    if (inn) {
+      localStorage.setItem('activeInn', JSON.stringify(inn))
+      commit('UPDATE_ACTIVE_INN', inn)
+    } else {
+      localStorage.removeItem('activeInn')
+      commit('UPDATE_ACTIVE_INN', null)
+    }
   },
 }
 
 const mutations = {
-  setActiveInn(state, inn) {
+  UPDATE_ACTIVE_INN(state, inn) {
     state.activeInn = inn
   },
 }

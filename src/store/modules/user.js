@@ -32,14 +32,14 @@ const actions = {
     })
   },
 
-  login(context, payload) {
-    context.commit('UPDATE_LOGIN_STATUS', loggingIn)
+  login({ commit }, payload) {
+    commit('UPDATE_LOGIN_STATUS', loggingIn)
     return loginService(payload)
       .then(({ data }) => {
         if (data.success) {
           const user = data.data.user
-          context.commit('UPDATE_USER', user)
-          context.commit('UPDATE_LOGIN_STATUS', loggedIn)
+          commit('UPDATE_USER', user)
+          commit('UPDATE_LOGIN_STATUS', loggedIn)
           localStorage.setItem('token', data.data.token)
           localStorage.setItem('user', JSON.stringify(user))
           router.push({ name: 'home' })
@@ -47,23 +47,23 @@ const actions = {
       })
       .catch(({ response }) => {
         if (response?.status === 403) {
-          context.commit('UPDATE_LOGIN_STATUS', loginFailure)
+          commit('UPDATE_LOGIN_STATUS', loginFailure)
         } else {
-          context.commit('UPDATE_LOGIN_STATUS', serverNotReachable)
+          commit('UPDATE_LOGIN_STATUS', serverNotReachable)
         }
-        context.commit('UPDATE_USER', null)
+        commit('UPDATE_USER', null)
       })
   },
 
-  logout(context) {
-    context.commit('UPDATE_USER', null)
-    context.commit('UPDATE_LOGIN_STATUS', {})
-    if (localStorage.getItem('token')) {
-      window.localStorage.removeItem('token')
-    }
-    if (localStorage.getItem('user')) {
-      window.localStorage.removeItem('user')
-    }
+  logout({ commit, dispatch }) {
+    window.localStorage.removeItem('token')
+    window.localStorage.removeItem('user')
+
+    commit('UPDATE_USER', null)
+    commit('UPDATE_LOGIN_STATUS', {})
+    commit('essential/UPDATE_SHOW_SIDE_MENU', false, { root: true })
+    dispatch('inn/setActiveInn', null, { root: true })
+
     if (router.history.current.name != 'login') {
       router.push({ name: 'login' })
     }

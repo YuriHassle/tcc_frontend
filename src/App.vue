@@ -24,10 +24,13 @@ export default {
   created() {
     const user = localStorage.getItem('user')
     const token = localStorage.getItem('token')
-    const curr_url = this.$router.history.current.name
-    if ((!token || !user) && curr_url !== 'login') {
-      this.$store.dispatch('user/logout')
+    const currentPath = this.$router.history.current.name
+    if ((!token || !user) && currentPath !== 'login') {
+      return this.$store.dispatch('user/logout')
     }
+
+    const activeInn = localStorage.getItem('activeInn')
+    this.$store.dispatch('inn/setActiveInn', JSON.parse(activeInn))
   },
 }
 </script>

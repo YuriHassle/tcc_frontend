@@ -8,7 +8,7 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">
-          {{ this.$store.state.user.user.name }}
+          {{ this.$store.state.inn.activeInn.name }}
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
@@ -41,10 +41,13 @@ export default {
   data() {
     return {
       items: [
+        { title: 'Painel', icon: 'mdi-help-box', path: 'dashboard' },
         { title: 'Funcionários', icon: 'mdi-account', path: 'employees' },
         { title: 'Itens', icon: 'mdi-view-dashboard', path: 'items' },
         { title: 'Serviços', icon: 'mdi-image', path: 'services' },
         { title: 'Pacotes', icon: 'mdi-help-box', path: 'packages' },
+        { title: 'Clientes', icon: 'mdi-help-box', path: 'customers' },
+        { title: 'Reservas', icon: 'mdi-help-box', path: 'bookings' },
       ],
     }
   },

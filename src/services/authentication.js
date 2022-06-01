@@ -9,6 +9,5 @@ export function login(data) {
 }
 
 export function register(data) {
-  console.log('payload', data)
   return api.post('register', data)
 }
