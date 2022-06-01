@@ -101,6 +101,9 @@ import { mapState } from 'vuex'
 import { alert, errorAlert, deleteConfirmationAlert } from '@/helpers/alerts'
 
 const NO_INDEX_FOCUSED = -1
+const OBJECT = 'item'
+const OBJECT_CAPITAL = 'Item'
+const OBJECT_PLURAL = 'itens'
 
 export default {
   components: { Input, Message },
@@ -137,7 +140,9 @@ export default {
   computed: {
     ...mapState('inn', ['activeInn']),
     formTitle() {
-      return this.formType === 'register' ? 'Cadastrar Item' : 'Editar Item'
+      return this.formType === 'register'
+        ? `Cadastrar ${OBJECT_CAPITAL}`
+        : `Editar ${OBJECT_CAPITAL}`
     },
     formType() {
       return this.focusedIndex === NO_INDEX_FOCUSED ? 'register' : 'edit'
@@ -164,7 +169,7 @@ export default {
         .then(({ data }) => {
           this.items = data.data
         })
-        .catch(() => errorAlert('listar os itens'))
+        .catch(() => errorAlert(`listar os ${OBJECT_PLURAL}`))
         .finally(() => (this.loading = false))
     },
 
@@ -203,9 +208,9 @@ export default {
       updateItem(this.item.id, this.item)
         .then(({ data }) => {
           Object.assign(this.items[this.focusedIndex], data.data)
-          alert('success', 'Sucesso!', 'Item atualizado.')
+          alert('success', 'Sucesso!', `${OBJECT_CAPITAL} atualizado.`)
         })
-        .catch(() => errorAlert('editar o item'))
+        .catch(() => errorAlert(`editar o ${OBJECT}`))
         .finally(() => this.closeDialog())
     },
 
@@ -213,9 +218,9 @@ export default {
       createItem({ ...this.item, inn_id: this.activeInn.id })
         .then(({ data }) => {
           this.items.push(data.data)
-          alert('success', 'Sucesso!', 'Item cadastrado.')
+          alert('success', 'Sucesso!', `${OBJECT_CAPITAL} cadastrado.`)
         })
-        .catch(() => errorAlert('cadastrar o item'))
+        .catch(() => errorAlert(`cadastrar ${OBJECT}`))
         .finally(() => this.closeDialog())
     },
 
@@ -223,9 +228,9 @@ export default {
       deleteItem(this.item.id)
         .then(() => {
           this.items.splice(this.focusedIndex, 1)
-          alert('success', 'Sucesso!', 'Item excluído.')
+          alert('success', 'Sucesso!', `${OBJECT_CAPITAL} excluído.`)
         })
-        .catch(() => errorAlert('excluir o item'))
+        .catch(() => errorAlert(`excluir ${OBJECT}`))
         .finally(() => this.closeDialog())
     },
 
