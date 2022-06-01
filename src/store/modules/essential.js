@@ -1,16 +1,10 @@
-const state = () => ({
-  showSideMenu: false,
-})
+const state = () => ({})
 
 const getters = {}
 
 const actions = {}
 
-const mutations = {
-  UPDATE_SHOW_SIDE_MENU(state, status) {
-    state.showSideMenu = status
-  },
-}
+const mutations = {}
 
 export default {
   namespaced: true,

@@ -1,5 +1,5 @@
 const state = () => ({
-  activeInn: null,
+  activeInn: JSON.parse(localStorage.getItem('activeInn')) || null,
 })
 
 const getters = {}

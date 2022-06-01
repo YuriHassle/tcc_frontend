@@ -61,7 +61,6 @@ const actions = {
 
     commit('UPDATE_USER', null)
     commit('UPDATE_LOGIN_STATUS', {})
-    commit('essential/UPDATE_SHOW_SIDE_MENU', false, { root: true })
     dispatch('inn/setActiveInn', null, { root: true })
 
     if (router.history.current.name != 'login') {

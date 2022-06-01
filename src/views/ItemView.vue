@@ -165,7 +165,7 @@ export default {
   methods: {
     initialize() {
       this.loading = true
-      getItems()
+      getItems({ inn_id: this.activeInn.id })
         .then(({ data }) => {
           this.items = data.data
         })

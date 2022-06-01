@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-app-bar app dense absolute>
-      <v-app-bar-nav-icon v-if="showSideMenu" @click.prevent="drawer = true" />
+      <v-app-bar-nav-icon v-if="activeInn" @click.prevent="drawer = true" />
       <v-app-bar-title> Inn Manager</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-menu v-if="isUserAuthenticated" offset-y>
@@ -15,7 +15,7 @@
         <v-list>
           <v-list-item-group
             v-model="selectedDotMenu"
-            @change="handleDotMenuClick()"
+            @change="handleDotMenuClick"
           >
             <v-list-item
               link
@@ -33,19 +33,18 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <SideMenu v-if="showSideMenu" :visible.sync="drawer" />
+    <SideMenu v-if="activeInn" :visible.sync="drawer" />
   </v-container>
 </template>
 
 <script>
 import SideMenu from './SideMenu.vue'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'Header',
   components: { SideMenu },
   data() {
     return {
-      isInHomePage: false,
       drawer: false,
       selectedDotMenu: '',
       dotsMenu: [
@@ -63,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('essential', ['showSideMenu']),
+    ...mapState('inn', ['activeInn']),
     isUserAuthenticated() {
       return this.$store.state.user.loginStatus.loggedIn
     },
@@ -72,17 +71,21 @@ export default {
     },
   },
   methods: {
+    ...mapActions('inn', ['setActiveInn']),
     handleDotMenuClick() {
-      if (this.selectedDotMenu === 'logout') {
-        this.$store.dispatch('user/logout')
-      }
-      if (
-        this.selectedDotMenu === 'inns' &&
-        this.$router.history.current.name !== 'home'
-      ) {
-        this.$router.push({ name: 'home' })
-      }
-      this.selectedDotMenu = ''
+      this.$nextTick(() => {
+        if (this.selectedDotMenu === 'logout') {
+          this.$store.dispatch('user/logout')
+        }
+        if (
+          this.selectedDotMenu === 'inns' &&
+          this.$router.history.current.name !== 'home'
+        ) {
+          this.$router.push({ name: 'home' })
+          this.setActiveInn(null)
+        }
+        this.selectedDotMenu = ''
+      })
     },
   },
 }

@@ -27,7 +27,7 @@
 <script>
 import { getInns } from '../services/inn'
 import Message from '../components/atoms/Message.vue'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'HomeView',
@@ -40,7 +40,6 @@ export default {
   },
   methods: {
     ...mapActions('inn', ['setActiveInn']),
-    ...mapMutations('essential', ['UPDATE_SHOW_SIDE_MENU']),
     loadInns() {
       this.message = 'Carregando Pousadas...'
       getInns()
@@ -59,12 +58,7 @@ export default {
   },
   created() {
     this.loadInns()
-    this.UPDATE_SHOW_SIDE_MENU(false)
-  },
-  beforeRouteLeave(to, _, next) {
-    if (to.name === 'home') return
-    if (to.name !== 'login') this.UPDATE_SHOW_SIDE_MENU(true)
-    next()
+    this.setActiveInn(null)
   },
 }
 </script>
