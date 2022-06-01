@@ -9,7 +9,7 @@
     <v-data-table
       v-else
       :headers="headers"
-      :items="items"
+      :items="packs"
       sort-by="name"
       class="elevation-1"
       :footer-props="{
@@ -19,7 +19,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Itens</v-toolbar-title>
+          <v-toolbar-title>Pacotes</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialogEdit" max-width="900px">
@@ -43,7 +43,7 @@
                   <v-row>
                     <v-col cols="12" sm="6" md="6">
                       <Input
-                        v-model.trim="item.name"
+                        v-model.trim="pack.name"
                         label="Nome"
                         required
                         :rules="validators.name"
@@ -51,11 +51,23 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <Input
-                        v-model="item.stock_quantity"
-                        label="Quantidade"
+                        v-model="pack.max_guests"
+                        label="Qtd. máxima de convidados"
                         required
-                        :rules="validators.stock_quantity"
+                        :rules="validators.max_guests"
                       />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="12" sm="6" md="6">
+                      Serviços
+                      <v-checkbox
+                        v-for="service in innServices"
+                        :key="service.id"
+                        v-model="pack.services"
+                        :label="service.name"
+                        :value="service.id"
+                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -95,15 +107,21 @@
 import Input from '../components/atoms/Input.vue'
 import Message from '../components/atoms/Message.vue'
 import { Validator as v } from '@/helpers/validators'
-import { getItems, createItem, updateItem, deleteItem } from '@/services/items'
+import {
+  getPackages,
+  createPackage,
+  updatePackage,
+  deletePackage,
+} from '@/services/packages'
+import { getServices } from '@/services/services'
 import { mapState } from 'vuex'
 
 import { alert, errorAlert, deleteConfirmationAlert } from '@/helpers/alerts'
 
 const NO_INDEX_FOCUSED = -1
-const OBJECT = 'item'
-const OBJECT_CAPITAL = 'Item'
-const OBJECT_PLURAL = 'itens'
+const OBJECT = 'pacote'
+const OBJECT_CAPITAL = 'Pacote'
+const OBJECT_PLURAL = 'pacotes'
 
 export default {
   components: { Input, Message },
@@ -117,19 +135,22 @@ export default {
           align: 'start',
           value: 'name',
         },
-        { text: 'Quantidade', value: 'stock_quantity' },
+        { text: 'Convidados', value: 'max_guests' },
         { text: 'Ações', value: 'actions', sortable: false },
       ],
-      items: [],
+      innServices: [],
+      packs: [],
       focusedIndex: NO_INDEX_FOCUSED,
-      item: {
+      // package is a reserved word
+      pack: {
         id: '',
         name: '',
-        stock_quantity: '',
+        max_guests: '',
+        services: [],
       },
       validators: {
         name: [v.required()],
-        stock_quantity: [v.required()],
+        max_guests: [v.required()],
       },
       message: '',
       valid: null,
@@ -165,17 +186,21 @@ export default {
   methods: {
     initialize() {
       this.loading = true
-      getItems({ inn_id: this.activeInn.id })
+      getPackages({ inn_id: this.activeInn.id })
         .then(({ data }) => {
-          this.items = data.data
+          this.packs = data.data
         })
         .catch(() => errorAlert(`listar os ${OBJECT_PLURAL}`))
         .finally(() => (this.loading = false))
+
+      getServices({ inn_id: this.activeInn.id }).then(
+        ({ data }) => (this.innServices = data.data)
+      )
     },
 
     handleActionClick(type, item) {
-      this.focusedIndex = this.items.indexOf(item)
-      this.item = { ...item }
+      this.focusedIndex = this.packs.indexOf(item)
+      this.pack = { ...item }
       switch (type) {
         case 'edit':
           this.dialogEdit = true
@@ -205,9 +230,9 @@ export default {
     },
 
     update() {
-      updateItem(this.item.id, this.item)
+      updatePackage(this.pack.id, this.pack)
         .then(({ data }) => {
-          Object.assign(this.items[this.focusedIndex], data.data)
+          Object.assign(this.packs[this.focusedIndex], data.data)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} atualizado.`)
         })
         .catch(() => errorAlert(`editar o ${OBJECT}`))
@@ -215,9 +240,12 @@ export default {
     },
 
     save() {
-      createItem({ ...this.item, inn_id: this.activeInn.id })
+      createPackage({
+        ...this.pack,
+        inn_id: this.activeInn.id,
+      })
         .then(({ data }) => {
-          this.items.push(data.data)
+          this.packs.push(data.data)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} cadastrado.`)
         })
         .catch(() => errorAlert(`cadastrar ${OBJECT}`))
@@ -225,9 +253,9 @@ export default {
     },
 
     delete() {
-      deleteItem(this.item.id)
+      deletePackage(this.pack.id)
         .then(() => {
-          this.items.splice(this.focusedIndex, 1)
+          this.packs.splice(this.focusedIndex, 1)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} excluído.`)
         })
         .catch(() => errorAlert(`excluir ${OBJECT}`))
@@ -238,7 +266,7 @@ export default {
       this.dialogEdit = false
       this.message = ''
       this.$refs?.moduleForm?.reset()
-      this.item = {}
+      this.pack = {}
       this.$nextTick(() => {
         this.focusedIndex = NO_INDEX_FOCUSED
       })

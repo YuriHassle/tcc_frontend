@@ -9,7 +9,7 @@
     <v-data-table
       v-else
       :headers="headers"
-      :items="items"
+      :items="services"
       sort-by="name"
       class="elevation-1"
       :footer-props="{
@@ -19,7 +19,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Itens</v-toolbar-title>
+          <v-toolbar-title>Serviços</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialogEdit" max-width="900px">
@@ -43,19 +43,23 @@
                   <v-row>
                     <v-col cols="12" sm="6" md="6">
                       <Input
-                        v-model.trim="item.name"
+                        v-model.trim="service.name"
                         label="Nome"
                         required
                         :rules="validators.name"
                       />
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col cols="12" sm="6" md="6">
-                      <Input
-                        v-model="item.stock_quantity"
-                        label="Quantidade"
-                        required
-                        :rules="validators.stock_quantity"
-                      />
+                      Itens
+                      <v-checkbox
+                        v-for="item in innItems"
+                        :key="item.id"
+                        v-model="service.items"
+                        :label="item.name"
+                        :value="item.id"
+                      ></v-checkbox>
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -95,15 +99,21 @@
 import Input from '../components/atoms/Input.vue'
 import Message from '../components/atoms/Message.vue'
 import { Validator as v } from '@/helpers/validators'
-import { getItems, createItem, updateItem, deleteItem } from '@/services/items'
+import {
+  getServices,
+  createService,
+  updateService,
+  deleteService,
+} from '@/services/services'
+import { getItems } from '@/services/items'
 import { mapState } from 'vuex'
 
 import { alert, errorAlert, deleteConfirmationAlert } from '@/helpers/alerts'
 
 const NO_INDEX_FOCUSED = -1
-const OBJECT = 'item'
-const OBJECT_CAPITAL = 'Item'
-const OBJECT_PLURAL = 'itens'
+const OBJECT = 'serviço'
+const OBJECT_CAPITAL = 'Serviço'
+const OBJECT_PLURAL = 'serviços'
 
 export default {
   components: { Input, Message },
@@ -117,19 +127,18 @@ export default {
           align: 'start',
           value: 'name',
         },
-        { text: 'Quantidade', value: 'stock_quantity' },
         { text: 'Ações', value: 'actions', sortable: false },
       ],
-      items: [],
+      innItems: [],
+      services: [],
       focusedIndex: NO_INDEX_FOCUSED,
-      item: {
+      service: {
         id: '',
         name: '',
-        stock_quantity: '',
+        items: [],
       },
       validators: {
         name: [v.required()],
-        stock_quantity: [v.required()],
       },
       message: '',
       valid: null,
@@ -165,17 +174,21 @@ export default {
   methods: {
     initialize() {
       this.loading = true
-      getItems({ inn_id: this.activeInn.id })
+      getServices({ inn_id: this.activeInn.id })
         .then(({ data }) => {
-          this.items = data.data
+          this.services = data.data
         })
         .catch(() => errorAlert(`listar os ${OBJECT_PLURAL}`))
         .finally(() => (this.loading = false))
+
+      getItems({ inn_id: this.activeInn.id }).then(
+        ({ data }) => (this.innItems = data.data)
+      )
     },
 
     handleActionClick(type, item) {
-      this.focusedIndex = this.items.indexOf(item)
-      this.item = { ...item }
+      this.focusedIndex = this.services.indexOf(item)
+      this.service = { ...item }
       switch (type) {
         case 'edit':
           this.dialogEdit = true
@@ -205,9 +218,9 @@ export default {
     },
 
     update() {
-      updateItem(this.item.id, this.item)
+      updateService(this.service.id, this.service)
         .then(({ data }) => {
-          Object.assign(this.items[this.focusedIndex], data.data)
+          Object.assign(this.services[this.focusedIndex], data.data)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} atualizado.`)
         })
         .catch(() => errorAlert(`editar o ${OBJECT}`))
@@ -215,9 +228,12 @@ export default {
     },
 
     save() {
-      createItem({ ...this.item, inn_id: this.activeInn.id })
+      createService({
+        ...this.service,
+        inn_id: this.activeInn.id,
+      })
         .then(({ data }) => {
-          this.items.push(data.data)
+          this.services.push(data.data)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} cadastrado.`)
         })
         .catch(() => errorAlert(`cadastrar ${OBJECT}`))
@@ -225,9 +241,9 @@ export default {
     },
 
     delete() {
-      deleteItem(this.item.id)
+      deleteService(this.service.id)
         .then(() => {
-          this.items.splice(this.focusedIndex, 1)
+          this.services.splice(this.focusedIndex, 1)
           alert('success', 'Sucesso!', `${OBJECT_CAPITAL} excluído.`)
         })
         .catch(() => errorAlert(`excluir ${OBJECT}`))
@@ -238,7 +254,7 @@ export default {
       this.dialogEdit = false
       this.message = ''
       this.$refs?.moduleForm?.reset()
-      this.item = {}
+      this.service = {}
       this.$nextTick(() => {
         this.focusedIndex = NO_INDEX_FOCUSED
       })

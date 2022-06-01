@@ -5,6 +5,8 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterInnView from '../views/RegisterInnView.vue'
 import ItemView from '../views/ItemView.vue'
+import ServiceView from '../views/ServiceView.vue'
+import PackageView from '../views/PackageView.vue'
 import store from '@/store/index'
 
 Vue.use(VueRouter)
@@ -34,6 +36,16 @@ const routes = [
     path: '/inns/:inn_id/items',
     name: 'items',
     component: ItemView,
+  },
+  {
+    path: '/inns/:inn_id/services',
+    name: 'services',
+    component: ServiceView,
+  },
+  {
+    path: '/inns/:inn_id/packages',
+    name: 'packages',
+    component: PackageView,
   },
 ]
 
