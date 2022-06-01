@@ -20,18 +20,6 @@ export default {
     Header,
     Footer,
   },
-
-  created() {
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('token')
-    const currentPath = this.$router.history.current.name
-    if ((!token || !user) && currentPath !== 'login') {
-      return this.$store.dispatch('user/logout')
-    }
-
-    const activeInn = localStorage.getItem('activeInn')
-    this.$store.dispatch('inn/setActiveInn', JSON.parse(activeInn))
-  },
 }
 </script>
 

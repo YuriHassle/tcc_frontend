@@ -5,6 +5,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterInnView from '../views/RegisterInnView.vue'
 import ItemView from '../views/ItemView.vue'
+import store from '@/store/index'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,25 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const { name } = to
+  const user = localStorage.getItem('user')
+  const token = localStorage.getItem('token')
+
+  if ((!user || !token) && name !== 'login') {
+    return store.dispatch('user/logout')
+  }
+
+  if (name !== 'home' && name !== 'login') {
+    const activeInn = localStorage.getItem('activeInn')
+    if (activeInn) {
+      next()
+    } else next({ name: 'home' })
+  }
+
+  next()
 })
 
 export default router
