@@ -1,6 +1,10 @@
 <template>
   <v-container>
     <v-app-bar app dense absolute>
+      <v-app-bar-nav-icon
+        v-if="isUserAuthenticated"
+        @click.prevent="drawer = true"
+      />
       <v-app-bar-title> Inn Manager</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-menu v-if="isUserAuthenticated" offset-y>
@@ -32,12 +36,15 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <SideMenu v-if="isUserAuthenticated" :visible.sync="drawer" />
   </v-container>
 </template>
 
 <script>
+import SideMenu from './SideMenu.vue'
 export default {
   name: 'Header',
+  components: { SideMenu },
   data() {
     return {
       drawer: false,
