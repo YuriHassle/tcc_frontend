@@ -1,6 +1,6 @@
 <template>
   <v-main class="inn-container">
-    <section v-if="inns.length <= 0 && message === ''">
+    <section v-if="inns && inns.length === 0">
       <h1 class="mb-6">
         Seu perfil ainda não foi vinculado a nenhuma pousada.
       </h1>
@@ -9,15 +9,12 @@
         <RouterLink :to="{ name: 'register_inn' }">clique aqui</RouterLink>
       </p>
     </section>
-    <section v-else>
+    <section v-if="inns && inns.length > 0">
       <h1 class="mb-6">Suas Pousadas</h1>
       <div v-for="(inn, index) in inns" :key="index" class="mb-4">
-        <RouterLink
-          :to="{ name: 'inn', params: { inn_id: inn.id } }"
-          class="inn-name"
-        >
+        <a class="inn-name" @click="handleClick(inn)">
           {{ inn.name }}
-        </RouterLink>
+        </a>
       </div>
       <RouterLink :to="{ name: 'register_inn' }">
         Cadastrar nova pousada
@@ -30,6 +27,7 @@
 <script>
 import { getInns } from '../services/inn'
 import Message from '../components/atoms/Message.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'HomeView',
@@ -37,18 +35,25 @@ export default {
   data() {
     return {
       message: '',
-      inns: [],
+      inns: null,
     }
   },
   methods: {
+    ...mapActions('inn', ['selectActiveInn']),
     loadInns() {
       this.message = 'Carregando Pousadas...'
       getInns()
-        .then(({ data }) => (this.inns = data.data))
+        .then(({ data }) => {
+          this.message = ''
+          this.inns = data.data
+        })
         .catch(
           () => (this.message = 'Não foi possível carregar suas pousadas.')
         )
-        .finally(() => (this.message = ''))
+    },
+    handleClick(inn) {
+      this.selectActiveInn(inn)
+      this.$router.push({ name: 'inns', params: { inn_id: inn.id } })
     },
   },
   created() {
