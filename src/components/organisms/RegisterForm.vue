@@ -56,7 +56,7 @@
 import Input from '../atoms/Input'
 import Message from '../atoms/Message'
 import { Validator as v } from '@/helpers/validators'
-import alert from '@/helpers/alerts'
+import { alert } from '@/helpers/alerts'
 import router from '../../router'
 
 export default {

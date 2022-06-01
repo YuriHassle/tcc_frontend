@@ -1,7 +1,7 @@
 import axios from 'axios'
 import router from '../router'
 import store from '../store'
-import alert from '../helpers/alerts'
+import { alert } from '../helpers/alerts'
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API,
