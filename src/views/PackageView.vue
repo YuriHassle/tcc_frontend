@@ -51,10 +51,10 @@
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <Input
-                        v-model="pack.max_guests"
-                        label="Qtd. máxima de convidados"
+                        v-model="pack.price"
+                        label="Preço"
                         required
-                        :rules="validators.max_guests"
+                        :rules="validators.price"
                       />
                     </v-col>
                   </v-row>
@@ -68,6 +68,14 @@
                         :label="service.name"
                         :value="service.id"
                       ></v-checkbox>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="6">
+                      <Input
+                        v-model="pack.max_guests"
+                        label="Qtd. máxima de hóspedes"
+                        required
+                        :rules="validators.max_guests"
+                      />
                     </v-col>
                   </v-row>
                 </v-card-text>
@@ -135,6 +143,7 @@ export default {
           align: 'start',
           value: 'name',
         },
+        { text: 'Preço', value: 'price' },
         { text: 'Convidados', value: 'max_guests' },
         { text: 'Ações', value: 'actions', sortable: false },
       ],
@@ -145,11 +154,13 @@ export default {
       pack: {
         id: '',
         name: '',
+        price: '',
         max_guests: '',
         services: [],
       },
       validators: {
         name: [v.required()],
+        price: [v.required()],
         max_guests: [v.required()],
       },
       message: '',
