@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       items: [
-        { title: 'Painel', icon: 'mdi-view-dashboard', path: 'dashboard' },
+        // { title: 'Painel', icon: 'mdi-view-dashboard', path: 'dashboard' },
         { title: 'Reservas', icon: 'mdi-home-account', path: 'bookings' },
         { title: 'Itens', icon: 'mdi-bottle-soda', path: 'items' },
         { title: 'Serviços', icon: 'mdi-fish', path: 'services' },
