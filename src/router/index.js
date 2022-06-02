@@ -7,6 +7,7 @@ import RegisterInnView from '../views/RegisterInnView.vue'
 import ItemView from '../views/ItemView.vue'
 import ServiceView from '../views/ServiceView.vue'
 import PackageView from '../views/PackageView.vue'
+import BookingView from '../views/BookingView.vue'
 import store from '@/store/index'
 
 Vue.use(VueRouter)
@@ -46,6 +47,11 @@ const routes = [
     path: '/inns/:inn_id/packages',
     name: 'packages',
     component: PackageView,
+  },
+  {
+    path: '/inns/:inn_id/bookings',
+    name: 'bookings',
+    component: BookingView,
   },
 ]
 

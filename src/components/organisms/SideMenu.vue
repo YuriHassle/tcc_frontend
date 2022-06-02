@@ -41,13 +41,11 @@ export default {
   data() {
     return {
       items: [
-        { title: 'Painel', icon: 'mdi-help-box', path: 'dashboard' },
-        { title: 'Funcionários', icon: 'mdi-account', path: 'employees' },
-        { title: 'Itens', icon: 'mdi-view-dashboard', path: 'items' },
-        { title: 'Serviços', icon: 'mdi-image', path: 'services' },
-        { title: 'Pacotes', icon: 'mdi-help-box', path: 'packages' },
-        { title: 'Clientes', icon: 'mdi-help-box', path: 'customers' },
-        { title: 'Reservas', icon: 'mdi-help-box', path: 'bookings' },
+        { title: 'Painel', icon: 'mdi-view-dashboard', path: 'dashboard' },
+        { title: 'Reservas', icon: 'mdi-home-account', path: 'bookings' },
+        { title: 'Itens', icon: 'mdi-bottle-soda', path: 'items' },
+        { title: 'Serviços', icon: 'mdi-fish', path: 'services' },
+        { title: 'Pacotes', icon: 'mdi-cash', path: 'packages' },
       ],
     }
   },
