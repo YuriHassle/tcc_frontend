@@ -11,7 +11,7 @@
     </section>
     <section v-if="inns && inns.length > 0">
       <h1 class="mb-6">Suas Pousadas</h1>
-      <div v-for="(inn, index) in inns" :key="index" class="mb-4">
+      <div v-for="(inn, index) in inns" :key="index" class="mb-11">
         <a class="inn-name" @click="handleClick(inn)">
           {{ inn.name }}
         </a>
@@ -70,6 +70,8 @@ export default {
   align-items: center;
 }
 .inn-name {
+  font-size: 24px;
   color: purple;
+  text-decoration: underline;
 }
 </style>
