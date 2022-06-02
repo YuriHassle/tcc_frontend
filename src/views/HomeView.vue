@@ -2,7 +2,7 @@
   <v-main class="inn-container">
     <section v-if="inns && inns.length === 0">
       <h1 class="mb-6">
-        Seu perfil ainda não foi vinculado a nenhuma pousada.
+        Seu perfil ainda não foi associado a nenhuma pousada.
       </h1>
       <p>
         Se você é proprietário de uma pousada e deseja cadastrá-la
@@ -53,7 +53,7 @@ export default {
     },
     handleClick(inn) {
       this.setActiveInn(inn)
-      this.$router.push({ name: 'items', params: { inn_id: inn.id } })
+      this.$router.push({ name: 'bookings', params: { inn_id: inn.id } })
     },
   },
   created() {

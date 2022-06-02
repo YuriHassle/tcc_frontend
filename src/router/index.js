@@ -65,11 +65,14 @@ router.beforeEach((to, from, next) => {
   const user = localStorage.getItem('user')
   const token = localStorage.getItem('token')
 
-  if ((!user || !token) && name !== 'login') {
+  const unguardedRoutes = ['login', 'register']
+  const inactiveInnRoutes = [...unguardedRoutes, 'register_inn', 'home']
+
+  if ((!user || !token) && !unguardedRoutes.includes(name)) {
     return store.dispatch('user/logout')
   }
 
-  if (name !== 'home' && name !== 'login') {
+  if (!inactiveInnRoutes.includes(name)) {
     const activeInn = localStorage.getItem('activeInn')
     if (activeInn) {
       next()

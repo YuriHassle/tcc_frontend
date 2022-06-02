@@ -4,7 +4,9 @@
     <LoginForm class="mb-8" />
     <span class="mb-6">
       Ainda não possui cadastro?
-      <RouterLink to="/register">Registre-se gratuitamente</RouterLink>
+      <RouterLink :to="{ name: 'register' }">
+        Registre-se gratuitamente
+      </RouterLink>
     </span>
   </section>
 </template>
